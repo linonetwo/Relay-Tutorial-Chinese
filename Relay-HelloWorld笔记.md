@@ -27,7 +27,7 @@ Hello world
 第一步，在 HelloWorld.js 文件里写一个 React 组件
 
 在ES6中，React 组件都是继承自 React.Component类的子类。
-
+```javascript
 import React from 'react';
 
 class HelloWorld extends React.Component {
@@ -36,7 +36,7 @@ class HelloWorld extends React.Component {
         return <h1>{hello}</h1>;
         }
 }
-
+```
 我们把来自 props 的变量 someHelloFromRelay 中的 hello 变量存储用 {hello} 提取出来，然后显示出来。
 
 这个 props.someHelloFromRelay 是由 Relay 自动传给我们的，我们坐享其成。
@@ -45,7 +45,7 @@ class HelloWorld extends React.Component {
 2.
 
 export default 意思是当别的 js 文件 import HelloWorld from "HelloWorld" 的时候，导入的不是上面那个 HelloWorld ，而是下面写的这个 Relay「容器」container 包装过的 HelloWorld 。
-
+```javascript
 import Relay from 'react-relay';
 
 export default Relay.createContainer(HelloWorld, {
@@ -57,7 +57,7 @@ export default Relay.createContainer(HelloWorld, {
         `,
     }
 });
-
+```
 Relay.createContainer() 接受你写的 React 组件，还有一个「请求片段」fragments。
 fragments 里的内容说明了这个组件需要 Relay 帮忙请求字段 hello 的值，并传入到 props.someHelloFromRelay 。
 
@@ -72,36 +72,37 @@ fragments 里的内容说明了这个组件需要 Relay 帮忙请求字段 hello
 什么是「请求片段」 fragments 呢？
 
 一个 GraphQL 「请求」Query 可以是这样的：
-
+```javascript
 query UserQuery {
   user(id: "123") {
     name,
   },
 }
-
+```
 通过 "123" 的全局 id 来请求用户的名字
 
 而一个「请求片段」 fragments 则是这样的：
-
+```javascript
 fragment UserProfilePhoto on User {
   profilePhoto(size: $size) {
     uri,
   },
 }
-
+```
 给定一个大小，请求某个用户的头像的 url。
 
 一个请求片段得组合到一个带全局 id 的「请求」Query 里才能使用：
-
+```javascript
 query UserQuery {
   user(id: "123") {
     ...UserProfilePhoto,
   },
 }
+```
 通过全局id "123" 请求用户的头像
 
 一个请求片段也可以在别的地方重复利用：
-
+```javascript
 query UserQuery {
   user(id: "123") {
     friends(first: 10) {
@@ -113,6 +114,7 @@ query UserQuery {
     },
   },
 }
+```
 你看，请求片段 UserProfilePhoto 就是一个组件化的东西，你可以放在任意一个请求里使用，而且事实上还可以把一个请求片段放在另一个请求片段里，格式就是 ES6 的扩展运算符，三个点。
 
 请求和请求片段组成了一棵树，请求作为根，请求片段作为子孙。
@@ -128,7 +130,7 @@ query UserQuery {
 这边的 Route 不是 React-Route 里那个路由的意思，它是当时 Relay 开发人员拍脑子想出的词，现在他们很后悔，觉得当时应该叫 RelayQueryRoots 或 RelayQueryConfig 才对，但一言既出驷马难追好汉不提当年囧， 我们英文暂时还是叫它 Route 好了，中文就叫它「请求配置」RelayQueryConfig 。
 
 首先起一个 routeName ，这名字不能和别的请求配置名重复，我们随便起个名字好了。
-
+```javascript
 import Relay from 'react-relay';
 
 class HelloRoute extends Relay.Route {
@@ -143,7 +145,7 @@ class HelloRoute extends Relay.Route {
         `,
     };
 }
-
+```
 我们之前写的 Relay 容器所需要的数据，不是已经通过「请求片段」声明了嘛，那个请求片段的名字叫做 someHelloFromRelay 来着，现在把它放进 helloField 字段，构造一个请求。
  helloField 字段在「结构库」schema.js 中定义，「结构库」中写了它包含着一个叫 hello 的 string ，还有这个 string 的值是
 本次请求的名字叫做 GreetingsQuery ，因为是用来请求 someHelloFromRelay 嘛。
@@ -157,7 +159,7 @@ class HelloRoute extends Relay.Route {
 用 ReactDOM.render 把 React 组件放到 DOM 上。
 当然，不能直接把我们的 <HelloWorld/> 放上去，不然它要怎么和我们上面写的那个 HelloRoute 发生关系呢？
 我们提供一个场所来给它们发生关系，这个 ホテル 的名字叫做 Relay.RootContainer ，把 HelloWorld 作为 Component 属性传进去，new 一个 HelloRoute 对象传进 route 属性，然后轻车熟路地把这个 ホテル 挂到 DOM 中的 mountNode 上。
-
+```javascript
 import HelloWorld from "./HelloWorld";
 import HelloRoute from "/routes/HelloWorldRoute.js";
 
@@ -170,7 +172,7 @@ ReactDOM.render(
     />,
     mountNode
 );
-
+```
 还记得上头 HelloRoute 里模板字符串内写着的 ${Component.getFragment('someHelloFromRelay')} 么？这个变量就是来自 Component={HelloWorld} ，可以搞到 Relay容器 HelloWorld 里声明的请求片段。
 
 注意虽然刚才我们给「请求配置」随手起了一个名字叫李傻蛋，但是我们不是route={new LiShadan()} 而是 route={new HelloRoute()} ，new 对象还是得按着基本法来的。
@@ -182,7 +184,7 @@ ReactDOM.render(
 5.
 
 接下来在 ./data/schema.js 里，用 GraphQLObjectType 声明我们可以请求的数据形式，然后把它放进 GraphQLSchema 里，GraphQLSchema 看请求符合 GraphQLObjectType 的形式，就返回对应的数据。
-
+```javascript
 import {
 
      GraphQLObjectType,
@@ -192,13 +194,13 @@ import {
      GraphQLString,
 
 } from 'graphql';
-
+```
 GraphQLObjectType 接受一个名字，我们叫它 HelloObject ，还记得么，你在上头第二步制作 Relay容器的时候见过它。
 
 当时我们写下了： Relay.QL` fragment on HelloObject { hello, } `  ，就是声明我们这个请求片段的形式符合 HelloObject，里头有一个 hello
 
 现在我们在「结构库」里这么写：
-
+```javascript
 var GreetingsType = new GraphQLObjectType({
 
      name: 'HelloObject',
@@ -210,22 +212,23 @@ var GreetingsType = new GraphQLObjectType({
      }),
 
 });
-
+```
 「字段」field 是返回一个对象的函数，说明了可请求的数据的格式，里头的GraphQLString 表示这边会返回一个 string 类型，更多类型可以搜一搜 GraphQL 的手册来看。
 
 
 现在没有数据库，不过我们可以一起假装这数据是从数据库里来的，你不说我不说就没人知道了。
-
+```javascript
 var data = {
 
      hello: 'Hello world',
 
 };
+```
 注意，数据库返回的 JSON 的变量名，一定要和 GraphQLObjectType 里定义的 field 名一致，也要和 React 组件 var {hello} = this.props.someHelloFromRelay; 中的左值相同，它是一脉相承的。
 
 
 最后，我们对外暴露一个「结构库」Schema，它是一个只有一个元素 query 的对象 { query: blabla }
-
+```javascript
 export default new GraphQLSchema({
 
      query: new GraphQLObjectType({
@@ -247,7 +250,7 @@ export default new GraphQLSchema({
      }),
 
 });
-
+```
 这个 query 的值是一个类似于上头 GreetingsType 的 GraphQLObjectType ，为了让这个教程显得不像是从国外翻译来的，我们给这个 GraphQLObjectType 取一个好听的名字叫"qingqiu" 。
 
 很好听对吧，文艺的名字，清秋。"qingqiu" 含有一个「根字段」root field，也就是 helloField ，它接受 GreetingsType 这样的请求，如果请求的类型没错，就执行 resolve 函数，这个函数会从后台数据库里取得数据。
@@ -264,7 +267,7 @@ export default new GraphQLSchema({
 
 Relay 的意义之一就在于，大量组件镶套时它能够不慌不忙，合并重复的请求，一次性交送所有请求给服务器程序上的「数据端点」endpoint，比如下面这个例子：
 
-
+```javascript
 import React from 'react';
 import Relay from 'react-relay';
 import HelloWorld from './HelloWorld.js';
@@ -279,13 +282,13 @@ class TaoTao extends React.Component {
                     </div>);
     }
 }
-
+```
 我们准备给 <HelloWorld /> 带个套，写了一个 TaoTao 组件，先把 Relay容器传入套套的 props.guanHaiTingTao 用 const { forHello } = this.props 保存下来，然后，瞅瞅 <HelloWorld/> 里面，我们用 someHelloFromRelay={forHello} 把 HelloWorld 所需的信息再传给了 HelloWorld 组件。
 
 说实话刚见到 Relay 的介绍时，我还以为子组件用 Relay容器包好了之后，在父组件里使用的时候就会自己请求数据了，没想到还是得在父组件的 Relay容器里主动帮孩子声明一下他需要什么信息，用 ${HelloWorld.getFragment('someHelloFromRelay')} 声明子组件需要什么数据，再把 HelloWorld 组件需要的数据作为 props 传给 HelloWorld组件，不帮孩子做这些事的话，孩子就会哭闹报错 Warning: RelayContainer: Expected query `someHelloFromRelay` to be supplied to `HelloWorld` as a prop from the parent. Pass an explicit `null` if this is intentional.
 
 
-
+```javascript
 TaoTao = Relay.createContainer(TaoTao, {
     fragments: {
         guanHaiTingTao: () => Relay.QL`
@@ -297,13 +300,14 @@ TaoTao = Relay.createContainer(TaoTao, {
         `,
     }
 });
+```
 以上是 TaoTao.js
 
 ————————————————
 同学们学过 GraphQL 的语法么？
 （学过啊，很好，上面这段声明和下面这两块代码是等价的，注意一下就好，也不用刻意去记。 / 没学过么？没事，不影响理解的，你只要知道上面这段声明还有下面这样的等价形式就好了，也不用刻意去记。）
 
-
+```javascript
 `
   fragment TaoTao on NameOfTaoTaoType {
      forHello {    
@@ -315,20 +319,23 @@ TaoTao = Relay.createContainer(TaoTao, {
      hello, 
   } 
 `
+```
 ————————————————
 
 
 注意，我们现在写的请求片段的格式是在 schema.js 里这样声明的：
+```javascript
 var TaoTaoType = new GraphQLObjectType({
     name: 'NameOfTaoTaoType',
     fields: () => ({
          forHello: {type: GreetingsType},
     }),
 });
+```
 它的意思是，你在用它为 HelloWorld 请求数据的时候，得在 HelloWorld 所需的数据外头包一层 forHello {       } ，以体现出有层级的数据结构。
 
 然后把结构库里的根字段改成为 TaoTao 服务：
-
+```javascript
 export default new GraphQLSchema({
     query: new GraphQLObjectType({
         name: 'QueryThatLigoudanWants',
@@ -345,9 +352,10 @@ var dataBase = {
         hello: 'Hello world',
     },
 }
-
+```
 
 所以我们还得把 /routes/HelloWorldRoute.js 里的请求配置改成向 TaoTaoFIeld 请求数据，请求到的数据返回给 guanHaiTingTao 变量
+```javascript
 class TaoTaoRoute extends Relay.Route {
     static routeName = 'LiShadan';
     static queries = {
@@ -360,10 +368,10 @@ class TaoTaoRoute extends Relay.Route {
         `,
     };
 }
-
+```
 
 最后别忘了修改 app.js 里的 Relay.RootContainer ：
-
+```javascript
 ReactDOM.render(
     <Relay.RootContainer
         Component={TaoTao}
@@ -371,7 +379,7 @@ ReactDOM.render(
     />,
     mountNode
 );
-
+```
 
 
 注意以上修改过的代码中，哪些变量被改成了 guanHaiTingTao ？
@@ -391,12 +399,12 @@ Relay 的好处之一：
 新的需求：   客户希望我们能让用户像做国旗下讲话一样，做 HelloWorld下讲话。
 
 
-HelloWorld
+##HelloWorld
 主席台↓
- 同志们
- 大家早上好啊
- 同志们辛苦啦
- 我的发言完了
+-同志们
+-大家早上好啊
+-同志们辛苦啦
+-我的发言完了
 
 
 发言要能由用户自己自由发挥，按下回车就提交。
@@ -407,6 +415,7 @@ HelloWorld
 在 SpeechItem.js 里：
 
 先用我们熟悉的方式声明一个组件
+```javascript
 class SpeechItem extends React.Component {
     render() {
         var {id, text} = this.props.aSpeechObjectIncludingIDAndText;
@@ -423,10 +432,12 @@ SpeechItem = Relay.createContainer(SpeechItem, {
         `,
     },
 });
+```
 这个组件用于显示一条条的 speech <ul/>，所以需要 id 和 text 两个信息，React列表组件如果不传入 key={id} 会在删除和添加新<ul/> 时发生事件触发器错位等疑难杂症，有<ul/>最好都把 key 属性加上。
 
 
 我们刚定义了上面这个组件会向 NameOfSpeechType 请求这些数据，接着我们到结构库 schema.js 里定义一下数据源的格式：
+```javascript
 var SpeechType = new GraphQLObjectType({
     name: 'NameOfSpeechType',
     fields: () => ({
@@ -434,11 +445,11 @@ var SpeechType = new GraphQLObjectType({
         text: {type: GraphQLString},
     }),
 });
-
+```
 
 
 然后我们再写一个 SpeechContainer.js  作为 <ul /> 来放上面那些 <li /> :
-
+```javascript
 class SpeechContainer extends React.Component {
     _handleSubmit = (e) => {
         e.preventDefault();
@@ -474,13 +485,14 @@ class SpeechContainer extends React.Component {
         );
     }
 }
-
+```
 你可能很惊讶，说好的只是个 <ul /> 呢？上面这一大坨 _handleSubmit 是啥？
 
 这是因为我们要让用户能发表演讲，所以得加入一个 <form />， 这一大坨函数就是用来在 e.preventDefault()阻止了表单的默认行为之后，将表单移交给 Relay 管的。
 
 
 接着照例，给它创建一个 Relay容器，请求数据库里存放的 speechesArray 用于显示，还有 Relay突变 所需要的ID ，然后把这些数据都传到变量 speechesFromRelay 里。
+```javascript
 SpeechContainer = Relay.createContainer(SpeechContainer, {
     fragments: {
         speechesFromRelay: () => Relay.QL`
@@ -493,12 +505,13 @@ SpeechContainer = Relay.createContainer(SpeechContainer, {
         `,
     },
 });
+```
 在 Relay 容器里声明的数据需求一般来自于组件自身，还有它的子组件。
 SpeechItem 你懂，是它的子组件。
 
 
 那 MutationOfCreateSpeechInComponent 是个啥？你可能都快忘了，它是在上面那一大坨的  _handleSubmit(e) 里 new 出来的对象，和 Relay容器一样也是定义数据流的容器组件，它就是 Relay突变，它定义了组件突变时的数据变化，这样写：
-
+```javascript
 class MutationOfCreateSpeechInComponent extends Relay.Mutation {
     static fragments = { // 这是一个请求片段，和 Relay容器很像对吧，它请求了表单要改变的数据库字段的 id
         speechListWithID: () => Relay.QL`
@@ -534,12 +547,12 @@ class MutationOfCreateSpeechInComponent extends Relay.Mutation {
     }
 
 }
-
+```
 
 以上是 SpeechItem.js ，我们写了组件还有它的突变声明，然后装进 Relay容器里。
 
 接着我们修改 TaoTao，把新的子组件加进去，
-
+```javascript
 class TaoTao extends React.Component {
     render() {
         const {forSpeech, forHello} = this.props.guanHaiTingTao;
@@ -563,11 +576,11 @@ TaoTao = Relay.createContainer(TaoTao, {
         `,
     }
 });
-
+```
 
 
 然后在 Schema.js 里，我们设置好对应的可请求的数据格式声明：
-
+```javascript
 var TaoTaoType = new GraphQLObjectType({
     name: 'NameOfTaoTaoType',
     fields: () => ({
@@ -575,11 +588,11 @@ var TaoTaoType = new GraphQLObjectType({
          forHello: {type: GreetingsType},
     }),
 });
-
+```
 
 
 然后，我们设置服务器上可改变的数据格式的声明：
-
+```javascript
 import {
     mutationWithClientMutationId,    
 } from 'graphql-relay';
@@ -604,7 +617,7 @@ var MutationOfCreateSpeech = mutationWithClientMutationId({
         return newSpeech;
     },
 });
-
+```
 mutateAndGetPayload 让你传入 text ，它把 text存好到数据库，然后返回一个对象，里面有 id 和你刚输入的 text，返回到客户端的负载会被用在 getConfigs（） 里面更新客户端的 store 。之所以叫「突变」 mutate and get 「负载」payload ，是因为……输入的东西改变了服务器还有很多地方的显示所以叫突变，返回给你的东西捆绑上了 id 变成了对象所以叫负载，当然这个命名方式我还没查到深层原因，我猜难道都和电路有关？
 
 inputFields 和 outputFields 没什么好说的，它们声明了服务器上 Mutation端点输入输出的数据格式，而 mutateAndGetPayload 是一个从输入到输出的映射。可以把 inputFields 和 outputFields 看成变量声明，outputFields = mutateAndGetPayload（inputFields） 是一次映射。
@@ -612,7 +625,7 @@ inputFields 和 outputFields 没什么好说的，它们声明了服务器上 Mu
 
 
 最后就是我们轻车熟路地暴露一个格式库出来：
-
+```javascript
 export default new GraphQLSchema({
     query: new GraphQLObjectType({
         name: 'QueryThatLigoudanWants',
@@ -630,7 +643,7 @@ export default new GraphQLSchema({
         }),
     }),
 });
-
+```
 多了一个 mutation: new GraphQLObjectType ，然而它的写法和 query 的写法差不多，右值 MutationOfCreateSpeech 是我们刚定义的那个 outputFields = mutateAndGetPayload（inputFields）；左值 createSpeechField 用在那个内外兼修里应外合夹逼定理处在内部的突变子组件里，还记得么？
 
 
@@ -645,7 +658,7 @@ var dataBase = {
         hello: 'Hello world',
     },
 }
-```javascript
+```
 
 
 8.
