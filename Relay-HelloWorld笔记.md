@@ -24,7 +24,7 @@ Relay是什么东西，同学们清楚不清楚啊？
 
 所以在开始进入 Relay 的世界之前，我们先来明确一下这个简单例子的需求：
   
-  
+
 我们需要一个完美的单页面应用，它可以显示出一个标题，标题上写着 ：
 
 ##Hello world
@@ -688,11 +688,13 @@ var dataBase = {
 
 
 
-####我其实看不懂代码，上面这些都是我瞎编的，我实在编不下去了，如果我哪里编错了请善意地提醒我。
+######我其实看不懂代码，上面这些都是我瞎编的，我实在编不下去了，如果我哪里编错了请善意地提醒我。
 
-###杜撰：上海科技大学 林一二
+####杜撰：上海科技大学 林一二
 
 参考：
+
+
 [ Relay 概念介绍](https://facebook.github.io/relay/docs/getting-started.html )
 
 [ Relay 试验场](https://facebook.github.io/relay/docs/getting-started.html ) 你可以把
@@ -700,8 +702,7 @@ var dataBase = {
 [ GraphQL 手册中关于类型的部分](http://graphql.org/docs/api-reference-type-system/)
 
 [ 我做容器之时掉进的坑](https://github.com/facebook/relay/issues/510)
-
-
+  
 >少年不识愁滋味，爱debug，爱debug，为debug熬一宿；
 
 >而今识尽愁滋味，欲de还休，欲de还休，先去睡觉de个球。
