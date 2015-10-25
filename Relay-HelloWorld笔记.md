@@ -74,7 +74,7 @@ fragments 里的内容说明了这个组件需要 Relay 帮忙请求字段 hello
 箭头函数的返回值 Relay.QL 是 ES6 标签函数，接受模板字符串中声明的请求片段 fragment on HelloObject ，然后到「结构库」schema.js 中去找对应的信息，结构库算是有点“后台”的感觉了，我们等一下再说“后台”，现在先把“前端”写完。
 但你现在可能有点晕晕的感觉了，我们等一下再写“前端”，现在先把什么叫「请求片段」 说完。
 
-————————————————————————
+***
 
 什么是「请求片段」 fragments 呢？
 
@@ -126,7 +126,7 @@ query UserQuery {
 
 请求和请求片段组成了一棵树，请求作为根，请求片段作为子孙。
 
-————————————————————————
+***
 
 以上是  HelloWorld.js
 
@@ -310,7 +310,7 @@ TaoTao = Relay.createContainer(TaoTao, {
 ```
 以上是 TaoTao.js
 
-————————————————
+***
 同学们学过 GraphQL 的语法么？
 （学过啊，很好，上面这段声明和下面这两块代码是等价的，注意一下就好，也不用刻意去记。 / 没学过么？没事，不影响理解的，你只要知道上面这段声明还有下面这样的等价形式就好了，也不用刻意去记。）
 
@@ -327,7 +327,8 @@ TaoTao = Relay.createContainer(TaoTao, {
   } 
 `
 ```
-————————————————
+
+***
 
 
 注意，我们现在写的请求片段的格式是在 schema.js 里这样声明的：
@@ -668,14 +669,14 @@ var dataBase = {
 ```
 
 
-8.
-最后我们来总结一下 Relay的特性：
+8.最后我们来总结一下 Relay的特性：
 
 >Relay 好处都有啥，谁说对了就给他。 —— 圣地亚哥民谣
 
 
 1. 我们一直在各种声明数据格式，客户端组件里我们声明这个组件需要的数据格式，还要照顾子组件需要的数据格式，还有声明突变传递的数据格式，声明来声明去生生不息绕梁三日不绝于耳，好处在于你对于组件那些地方要显示的数据来自哪里会比较清楚，你的接盘侠也比较容易看懂你开发的 React-Relay 模块。
 2.突变和Promise在某种意义上类似，它能保证你向服务器提交的信息总是更新了所有该更新的地方，如果服务器链接速度慢，它会先更新客户端的显示让用户体验显得精雕细琢，而且如果服务器连接中断，它会撤销这些更改。
+
 
 事实上，我为了保证阅读速度并没有在上面的例子中加入太多的功能，但自从有了这个 boilerplate 你已经可以很轻松地查阅官方API文档了，那些想打造一个震惊世界的APP只缺程序员的人缺的就是你啊！
 
@@ -686,22 +687,22 @@ var dataBase = {
 
 
 
-我其实看不懂代码，上面这些都是我瞎编的，我实在编不下去了，如果我哪里编错了请善意地提醒我。
+####我其实看不懂代码，上面这些都是我瞎编的，我实在编不下去了，如果我哪里编错了请善意地提醒我。
 
-杜撰：上海科技大学 林一二
+###杜撰：上海科技大学 林一二
 
 参考：
-https://facebook.github.io/relay/docs/getting-started.html  Relay 概念介绍
+[ Relay 概念介绍](https://facebook.github.io/relay/docs/getting-started.html )
 
-https://facebook.github.io/relay/prototyping/playground.html#/   Relay HelloWorld 小例子
+[ Relay 试验场](https://facebook.github.io/relay/docs/getting-started.html ) 你可以把
 
-http://graphql.org/docs/api-reference-type-system/  GraphQL 手册中关于类型的部分
+[ GraphQL 手册中关于类型的部分](http://graphql.org/docs/api-reference-type-system/)
 
-https://github.com/facebook/relay/issues/510 我做容器之时掉进的坑
+[ 我做容器之时掉进的坑](https://github.com/facebook/relay/issues/510)
 
 
+>少年不识愁滋味，爱debug，爱debug，为debug熬一宿；
 
-少年不识愁滋味，爱debug，爱debug，为debug熬一宿；
-而今识尽愁滋味，欲de还休，欲de还休，先去睡觉de个球。
+>而今识尽愁滋味，欲de还休，欲de还休，先去睡觉de个球。
 
 
