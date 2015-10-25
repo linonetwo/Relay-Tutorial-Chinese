@@ -8,29 +8,30 @@
 0.
 
 Relay是什么东西，同学们清楚不清楚啊？
-（清楚啊，好，那我就不废话继续往下讲 /  不清楚？不清楚也没关系，不影响的，我先继续往下讲……）
 
+（清楚啊，好，那我就不废话继续往下讲 /  不清楚？不清楚也没关系，不影响的，我先继续往下讲……）
+  
 因为默认会看这篇文章的同学都已经基本了解了 Flux 架构，所以我们直接通过一个简单的例子来说明怎样用 Relay 为 React 应用加入单向数据流，你们兹瓷不兹瓷丫？
 （对嘛，写说明文还是得按基本法来的。）
-
+  
 首先，众所周知：
-
+  
 >需求不清是加班的前兆。   —— 孙悟空
-
+  
 所以在开始进入 Relay 的世界之前，我们先来明确一下这个简单例子的需求：
   
-
-我们需要一个完美的单页面应用，它可以显示出一个标题，标题上写着 ：
-
-##Hello world
-
-需求很简单，让我们开始吧。
   
+我们需要一个完美的单页面应用，它可以显示出一个标题，标题上写着 ：
+  
+##Hello world
+  
+需求很简单，让我们开始吧。
+
 1.
   
-
+  
 第一步，在 HelloWorld.js 文件里写一个 React 组件
-
+  
 在ES6中，React 组件都是继承自 React.Component类的子类。
 ```javascript
 import React from 'react';
@@ -43,7 +44,7 @@ class HelloWorld extends React.Component {
 }
 ```
 我们把来自 props 的变量 someHelloFromRelay 中的 hello 变量存储用 {hello} 提取出来，然后显示出来。
-
+  
 这个 props.someHelloFromRelay 是由 Relay 自动传给我们的，我们坐享其成。
 我们知道 props 一般只能是父组件传给子组件，所以很明显，我们要用 Relay 提供的某个组件来做 HelloWorld 的父组件，这样 Relay 就能把我们需要的值通过 props 传给 HelloWorld ，并且保证传完值之后 HelloWorld 才被加载。
   
@@ -65,13 +66,13 @@ export default Relay.createContainer(HelloWorld, {
 ```
 Relay.createContainer() 接受你写的 React 组件，还有一个「请求片段」fragments。
 fragments 里的内容说明了这个组件需要 Relay 帮忙请求字段 hello 的值，并传入到 props.someHelloFromRelay 。
-
+  
 然后 Relay.createContainer() 返回一个看起来和 HelloWorld 一模一样的 React 组件，这个容器具有把 someHelloFromRelay 变量通过 props 传给子组件 HelloWorld ，还有保证传完值之后子组件 HelloWorld 才被加载等等优越先进的功能。
-
+  
 请求片段中， someHelloFromRelay 告诉 Relay，拿到数据之后传给 HelloWorld 的 props.someHelloFromRelay 。
 箭头函数的返回值 Relay.QL 是 ES6 标签函数，接受模板字符串中声明的请求片段 fragment on HelloObject ，然后到「结构库」schema.js 中去找对应的信息，结构库算是有点“后台”的感觉了，我们等一下再说“后台”，现在先把“前端”写完。
 但你现在可能有点晕晕的感觉了，我们等一下再写“前端”，现在先把什么叫「请求片段」 说完。
-
+  
 ***
 
 什么是「请求片段」 fragments 呢？
@@ -85,7 +86,7 @@ query UserQuery {
 }
 ```
 通过 "123" 的全局 id 来请求用户的名字
-
+  
 而一个「请求片段」 fragments 则是这样的：
 ```javascript
 fragment UserProfilePhoto on User {
@@ -95,7 +96,7 @@ fragment UserProfilePhoto on User {
 }
 ```
 给定一个大小，请求某个用户的头像的 url。
-
+  
 一个请求片段得组合到一个带全局 id 的「请求」Query 里才能使用：
 ```javascript
 query UserQuery {
@@ -121,17 +122,17 @@ query UserQuery {
 }
 ```
 你看，请求片段 UserProfilePhoto 就是一个组件化的东西，你可以放在任意一个请求里使用，而且事实上还可以把一个请求片段放在另一个请求片段里，格式就是 ES6 的扩展运算符，三个点。
-
+  
 请求和请求片段组成了一棵树，请求作为根，请求片段作为子孙。
-
+  
 ***
-
+  
 以上是  HelloWorld.js
   
 3.
   
 然后在 /routes/HelloWorldRoute.js 里写 GraphQL 请求的配置文件。
-
+  
 这边的 Route 不是 React-Route 里那个路由的意思，它是当时 Relay 开发人员拍脑子想出的词，现在他们很后悔，觉得当时应该叫 RelayQueryRoots 或 RelayQueryConfig 才对，但一言既出驷马难追好汉不提当年囧， 我们英文暂时还是叫它 Route 好了，中文就叫它「请求配置」RelayQueryConfig 。
 
 首先起一个 routeName ，这名字不能和别的请求配置名重复，我们随便起个名字好了。
@@ -230,8 +231,8 @@ var data = {
 };
 ```
 注意，数据库返回的 JSON 的变量名，一定要和 GraphQLObjectType 里定义的 field 名一致，也要和 React 组件 var {hello} = this.props.someHelloFromRelay; 中的左值相同，它是一脉相承的。
-
-
+  
+  
 最后，我们对外暴露一个「结构库」Schema，它是一个只有一个元素 query 的对象 { query: blabla }
 ```javascript
 export default new GraphQLSchema({
@@ -259,8 +260,15 @@ export default new GraphQLSchema({
 这个 query 的值是一个类似于上头 GreetingsType 的 GraphQLObjectType ，为了让这个教程显得不像是从国外翻译来的，我们给这个 GraphQLObjectType 取一个好听的名字叫"qingqiu" 。
   
 很好听对吧，文艺的名字，清秋。"qingqiu" 含有一个「根字段」root field，也就是 helloField ，它接受 GreetingsType 这样的请求，如果请求的类型没错，就执行 resolve 函数，这个函数会从后台数据库里取得数据。
-
+  
 至此，前端 React 和后台数据库就由 React - RelayCompenment - Relay.RootContainer - Relay.Route - Schema - Database 像烤串一样地串起来了。
+  
+  
+试试把
+[code](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/1%20Helloworld.js)
+和
+[schema](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/1%20schemaOfHelloworld.js)
+放到[ Relay 试验场](https://facebook.github.io/relay/docs/getting-started.html ) 里看效果，虽然也没啥好看的，不过从宏观上回顾一下代码也蛮好的。
   
 但是，别忘了这只是个 HelloWorld，里面用到的 Relay 只是很小的一部分，我们接着往下拓展它。
   
@@ -411,14 +419,14 @@ Relay 的好处之一：
 -同志们辛苦啦
 -我的发言完了
 
-
+  
 发言要能由用户自己自由发挥，按下回车就提交。
-
-
+  
+  
 需要交互了啊，是时候展示真正的技术了，我们用 Relay的 「突变」Mutation ，它用来从用户处向数据库提交信息，并且同时更新所有和这个信息相关的组件显示结果。它作为一个类似子组件的形式存在，就像 Relay容器包在你的组件外面一样，你可以里面放一个 Relay突变，外面放一个 Relay容器，内外兼修里应外合夹逼定理，不过首先要创建一个 React组件：
-
+  
 在 SpeechItem.js 里：
-
+  
 先用我们熟悉的方式声明一个组件
 ```javascript
 class SpeechItem extends React.Component {
@@ -664,7 +672,8 @@ var dataBase = {
     },
 }
 ```
-
+  
+效果可以把[code](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/3%20combine.js)和[schema](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/3%20SchemaOfCombine.js)放到[ Relay 试验场](https://facebook.github.io/relay/docs/getting-started.html ) 里观看。
   
 8.
   
@@ -693,7 +702,7 @@ var dataBase = {
 
 [ Relay 概念介绍](https://facebook.github.io/relay/docs/getting-started.html )
 
-[ Relay 试验场](https://facebook.github.io/relay/docs/getting-started.html ) 你可以把
+[ Relay 试验场](https://facebook.github.io/relay/docs/getting-started.html ) 
 
 [ GraphQL 手册中关于类型的部分](http://graphql.org/docs/api-reference-type-system/)
 
