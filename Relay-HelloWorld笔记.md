@@ -30,8 +30,10 @@ Relay是什么东西，同学们清楚不清楚啊？
 ##Hello world
 
 需求很简单，让我们开始吧。
-
+  
 1.
+  
+
 第一步，在 HelloWorld.js 文件里写一个 React 组件
 
 在ES6中，React 组件都是继承自 React.Component类的子类。
@@ -49,9 +51,9 @@ class HelloWorld extends React.Component {
 
 这个 props.someHelloFromRelay 是由 Relay 自动传给我们的，我们坐享其成。
 我们知道 props 一般只能是父组件传给子组件，所以很明显，我们要用 Relay 提供的某个组件来做 HelloWorld 的父组件，这样 Relay 就能把我们需要的值通过 props 传给 HelloWorld ，并且保证传完值之后 HelloWorld 才被加载。
-
+  
 2.
-
+  
 export default 意思是当别的 js 文件 import HelloWorld from "HelloWorld" 的时候，导入的不是上面那个 HelloWorld ，而是下面写的这个 Relay「容器」container 包装过的 HelloWorld 。
 ```javascript
 import Relay from 'react-relay';
@@ -130,9 +132,9 @@ query UserQuery {
 ***
 
 以上是  HelloWorld.js
-
+  
 3.
-
+  
 然后在 /routes/HelloWorldRoute.js 里写 GraphQL 请求的配置文件。
 
 这边的 Route 不是 React-Route 里那个路由的意思，它是当时 Relay 开发人员拍脑子想出的词，现在他们很后悔，觉得当时应该叫 RelayQueryRoots 或 RelayQueryConfig 才对，但一言既出驷马难追好汉不提当年囧， 我们英文暂时还是叫它 Route 好了，中文就叫它「请求配置」RelayQueryConfig 。
@@ -159,9 +161,9 @@ class HelloRoute extends Relay.Route {
 本次请求的名字叫做 GreetingsQuery ，因为是用来请求 someHelloFromRelay 嘛。
 
 以上是 /routes/HelloWorldRoute.js
-
+  
 4.
-
+  
 再写一个 app.js
 
 用 ReactDOM.render 把 React 组件放到 DOM 上。
@@ -188,9 +190,9 @@ ReactDOM.render(
 此后 Relay 就会把 React 组件中的请求综合起来，向后台请求数据，然后把数据交给组件，再让组件开始渲染。
 
 以上是 app.js
-
+  
 5.
-
+  
 接下来在 ./data/schema.js 里，用 GraphQLObjectType 声明我们可以请求的数据形式，然后把它放进 GraphQLSchema 里，GraphQLSchema 看请求符合 GraphQLObjectType 的形式，就返回对应的数据。
 ```javascript
 import {
@@ -260,21 +262,19 @@ export default new GraphQLSchema({
 });
 ```
 这个 query 的值是一个类似于上头 GreetingsType 的 GraphQLObjectType ，为了让这个教程显得不像是从国外翻译来的，我们给这个 GraphQLObjectType 取一个好听的名字叫"qingqiu" 。
-
+  
 很好听对吧，文艺的名字，清秋。"qingqiu" 含有一个「根字段」root field，也就是 helloField ，它接受 GreetingsType 这样的请求，如果请求的类型没错，就执行 resolve 函数，这个函数会从后台数据库里取得数据。
 
 至此，前端 React 和后台数据库就由 React - RelayCompenment - Relay.RootContainer - Relay.Route - Schema - Database 像烤串一样地串起来了。
-
-但是，别忘了这只是个 HelloWorld，里面用到的 Relay 只是很小的一部分，我们接着往下拓展它，一是把传说中的单向数据流闭合起来，二是真正把 Relay 用出意义来。
-
-
+  
+但是，别忘了这只是个 HelloWorld，里面用到的 Relay 只是很小的一部分，我们接着往下拓展它。
+  
 6.
-
-
+  
 >再忙不忘家人，再方不忘带套。 —— 中国谚语
 
 Relay 的意义之一就在于，大量组件镶套时它能够不慌不忙，合并重复的请求，一次性交送所有请求给服务器程序上的「数据端点」endpoint，比如下面这个例子：
-
+  
 ```javascript
 import React from 'react';
 import Relay from 'react-relay';
@@ -292,7 +292,7 @@ class TaoTao extends React.Component {
 }
 ```
 我们准备给 <HelloWorld /> 带个套，写了一个 TaoTao 组件，先把 Relay容器传入套套的 props.guanHaiTingTao 用 const { forHello } = this.props 保存下来，然后，瞅瞅 <HelloWorld/> 里面，我们用 someHelloFromRelay={forHello} 把 HelloWorld 所需的信息再传给了 HelloWorld 组件。
-
+  
 说实话刚见到 Relay 的介绍时，我还以为子组件用 Relay容器包好了之后，在父组件里使用的时候就会自己请求数据了，没想到还是得在父组件的 Relay容器里主动帮孩子声明一下他需要什么信息，用 ${HelloWorld.getFragment('someHelloFromRelay')} 声明子组件需要什么数据，再把 HelloWorld 组件需要的数据作为 props 传给 HelloWorld组件，不帮孩子做这些事的话，孩子就会哭闹报错 Warning: RelayContainer: Expected query `someHelloFromRelay` to be supplied to `HelloWorld` as a prop from the parent. Pass an explicit `null` if this is intentional.
 
 
@@ -389,22 +389,23 @@ ReactDOM.render(
     mountNode
 );
 ```
-
-
+  
 注意以上修改过的代码中，哪些变量被改成了 guanHaiTingTao ？
-
-
-
+  
+  
+  
 Relay 的好处之一：
 1. 你不再需要在组件里 imperative 地搞一大坨 AJAX ，现在需要做的是用 declarative 的方式写一个请求片段，更抽象，更贴近你在成为程序员之前的人类天性。你看我们刚刚写的东西是不是都是对需要的数据的定义还有对可能会被需要的数据的定义？
 2.一大堆子组件的请求被自动去重、合并，可以节省大量的网络带宽、CPU等资源，scale up 之后谁用谁知道。
 
 但目前还没法看出第二个优点，所以我们再塞一个子组件进套套里如何？
-
-
+  
+  
 二、从 React 到数据库
+  
 
 7.
+
 新的需求：   客户希望我们能让用户像做国旗下讲话一样，做 HelloWorld下讲话。
 
 
@@ -457,7 +458,7 @@ var SpeechType = new GraphQLObjectType({
 ```
 
 
-然后我们再写一个 SpeechContainer.js  作为 <ul /> 来放上面那些 <li /> :
+然后我们再写一个 SpeechContainer.js  作为 ```<ul /> ```来放上面那些``` <li /> ```:
 ```javascript
 class SpeechContainer extends React.Component {
     _handleSubmit = (e) => {
@@ -495,9 +496,9 @@ class SpeechContainer extends React.Component {
     }
 }
 ```
-你可能很惊讶，说好的只是个 <ul /> 呢？上面这一大坨 _handleSubmit 是啥？
+你可能很惊讶，说好的只是个 ```<ul /> ```呢？上面这一大坨 _handleSubmit 是啥？
 
-这是因为我们要让用户能发表演讲，所以得加入一个 <form />， 这一大坨函数就是用来在 e.preventDefault()阻止了表单的默认行为之后，将表单移交给 Relay 管的。
+这是因为我们要让用户能发表演讲，所以得加入一个 ```<form />```， 这一大坨函数就是用来在 e.preventDefault()阻止了表单的默认行为之后，将表单移交给 Relay 管的。
 
 
 接着照例，给它创建一个 Relay容器，请求数据库里存放的 speechesArray 用于显示，还有 Relay突变 所需要的ID ，然后把这些数据都传到变量 speechesFromRelay 里。
@@ -669,14 +670,16 @@ var dataBase = {
 }
 ```
 
-
-8.最后我们来总结一下 Relay的特性：
+  
+8.
+  
+最后我们来总结一下 Relay的特性：
+  
 
 >Relay 好处都有啥，谁说对了就给他。 —— 圣地亚哥民谣
   
-
 1.我们一直在各种声明数据格式，客户端组件里我们声明这个组件需要的数据格式，还要照顾子组件需要的数据格式，还有声明突变传递的数据格式，声明来声明去生生不息绕梁三日不绝于耳，好处在于你对于组件那些地方要显示的数据来自哪里会比较清楚，你的接盘侠也比较容易看懂你开发的 React-Relay 模块。
-  
+
 2.突变和Promise在某种意义上类似，它能保证你向服务器提交的信息总是更新了所有该更新的地方，如果服务器链接速度慢，它会先更新客户端的显示让用户体验显得精雕细琢，而且如果服务器连接中断，它会撤销这些更改。
 
 
