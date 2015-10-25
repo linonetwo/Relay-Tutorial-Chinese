@@ -443,7 +443,7 @@ SpeechItem = Relay.createContainer(SpeechItem, {
     },
 });
 ```
-这个组件用于显示一条条的 speech <ul/>，所以需要 id 和 text 两个信息，React列表组件如果不传入 key={id} 会在删除和添加新<ul/> 时发生事件触发器错位等疑难杂症，有<ul/>最好都把 key 属性加上。
+这个组件用于显示一条条的 speech ```<ul/>```，所以需要 id 和 text 两个信息，React列表组件如果不传入 ```key={id}``` 会在删除和添加新```<ul/> ```时发生事件触发器错位等疑难杂症，有```<ul/>```最好都把 key 属性加上。
 
 
 我们刚定义了上面这个组件会向 NameOfSpeechType 请求这些数据，接着我们到结构库 schema.js 里定义一下数据源的格式：
