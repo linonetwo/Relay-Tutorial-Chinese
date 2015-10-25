@@ -1,5 +1,5 @@
 # Relay-Tutorial-Chinese
-Relay 中文教程  ~~其实是学习笔记~~
+Relay 中文教程  ~~其实是学习笔记~~  同道者欢迎交流。
   
 ***
 
