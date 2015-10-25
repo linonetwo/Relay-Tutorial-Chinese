@@ -1,9 +1,12 @@
-有些专有名词还没有现成的好翻译，我用 「术语翻译」OriginalTerminology 来对应到中文，希望能帮助您提升阅读速度。
-前置技能： ES6     、  React    、  Flux    、  GraphQL     、   贤者时间
+######有些专有名词还没有现成的好翻译，我用 「术语翻译」OriginalTerminology 来对应到中文，希望能帮助您提升阅读速度。
+####前置技能： ES6     、  React    、  Flux    、  GraphQL     、   贤者时间
 
 创建 React + Relay 的步骤
 
 一、 从数据库到 React
+
+
+
 
 0.
 Relay是什么东西，同学们清楚不清楚啊？
@@ -19,7 +22,7 @@ Relay是什么东西，同学们清楚不清楚啊？
 
 我们需要一个完美的单页面应用，它可以显示出一个标题，标题上写着 ：
 
-Hello world
+##Hello world
 
 需求很简单，让我们开始吧。
 
