@@ -43,9 +43,9 @@ class HelloWorld extends React.Component {
         }
 }
 ```
-我们把来自 props 的变量 someHelloFromRelay 中的 hello 变量存储用 {hello} 提取出来，然后显示出来。
+我们把来自 props 的变量 someHelloFromRelay 中的 hello 变量用 {hello} 提取出来，它的意思是 hello 变量处在 someHelloFromRelay 这个JSON对象里，现在你只提取这个对象里的 hello 变量。然后显示出来，这边也有个 {hello} ，相信你早已知道，JSX里你要在 tag 里运行 js 语句，语句外面就要加一对花括号，这边是执行了 hello; 这样的语句，使它内部的值显示出来。
   
-这个 props.someHelloFromRelay 是由 Relay 自动传给我们的，我们坐享其成。
+上面这个 props.someHelloFromRelay 是由 Relay 自动传给我们的，我们坐享其成。
 我们知道 props 一般只能是父组件传给子组件，所以很明显，我们要用 Relay 提供的某个组件来做 HelloWorld 的父组件，这样 Relay 就能把我们需要的值通过 props 传给 HelloWorld ，并且保证传完值之后 HelloWorld 才被加载。
   
 2.
