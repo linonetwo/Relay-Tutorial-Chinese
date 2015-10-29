@@ -203,7 +203,7 @@ import {
 ```
 GraphQLObjectType 接受一个名字，我们叫它 HelloObject ，还记得么，你在上头第二步制作 Relay容器的时候见过它。
 
-当时我们写下了： Relay.QL` fragment on HelloObject { hello, } `  ，就是声明我们这个请求片段的形式符合 HelloObject，里头有一个 hello
+当时我们写下了： ```Relay.QL` fragment on HelloObject { hello, } `  ``` ，就是声明我们这个请求片段的形式符合 HelloObject，里头有一个 hello
 
 现在我们在「结构库」里这么写：
 ```javascript
@@ -296,7 +296,7 @@ class TaoTao extends React.Component {
 ```
 我们准备给 <HelloWorld /> 带个套，写了一个 TaoTao 组件，先把 Relay容器传入套套的 props.guanHaiTingTao 用 const { forHello } = this.props 保存下来，然后，瞅瞅 <HelloWorld/> 里面，我们用 someHelloFromRelay={forHello} 把 HelloWorld 所需的信息再传给了 HelloWorld 组件。
   
-说实话刚见到 Relay 的介绍时，我还以为子组件用 Relay容器包好了之后，在父组件里使用的时候就会自己请求数据了，没想到还是得在父组件的 Relay容器里主动帮孩子声明一下他需要什么信息，用 ${HelloWorld.getFragment('someHelloFromRelay')} 声明子组件需要什么数据，再把 HelloWorld 组件需要的数据作为 props 传给 HelloWorld组件，不帮孩子做这些事的话，孩子就会哭闹报错 Warning: RelayContainer: Expected query `someHelloFromRelay` to be supplied to `HelloWorld` as a prop from the parent. Pass an explicit `null` if this is intentional.
+说实话刚见到 Relay 的介绍时，我还以为子组件用 Relay容器包好了之后，在父组件里使用的时候就会自己请求数据了，没想到还是得在父组件的 Relay容器里主动帮孩子声明一下他需要什么信息，用 ${HelloWorld.getFragment('someHelloFromRelay')} 声明子组件需要什么数据，再把 HelloWorld 组件需要的数据作为 props 传给 HelloWorld组件，不帮孩子做这些事的话，孩子就会哭闹报错 ``` Warning: RelayContainer: Expected query `someHelloFromRelay` to be supplied to `HelloWorld` as a prop from the parent. Pass an explicit `null` if this is intentional. ```
 
 
 ```javascript
