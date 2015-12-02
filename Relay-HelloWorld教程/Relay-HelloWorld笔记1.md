@@ -71,7 +71,7 @@ fragments 里的内容说明了这个组件需要 Relay 帮忙查询字段 hello
 然后 Relay.createContainer() 返回一个看起来和 HelloWorld 一模一样的 React 组件，这个容器具有把 someHelloFromRelay 变量通过 props 传给子组件 HelloWorld ，还有保证传完值之后子组件 HelloWorld 才被加载等等优越先进的功能。
   
 查询片段中， someHelloFromRelay 告诉 Relay，拿到数据之后传给 HelloWorld 的 props.someHelloFromRelay 。
-箭头函数的返回值 Relay.QL 是 ES6 标签函数，接受模板字符串中声明的查询片段 fragment on HelloObject ，然后到「结构库」schema.js 中去找对应的信息，结构库算是有点“后台”的感觉了，我们等一下再说“后台”，现在先把“前端”写完。
+箭头函数的返回值 Relay.QL 是 ES6 标签函数，接受模板字符串中声明的查询片段 fragment on HelloObject ，然后到「格式库」schema.js 中去找对应的信息，格式库算是有点“后台”的感觉了，我们等一下再说“后台”，现在先把“前端”写完。
 但你现在可能有点晕晕的感觉了，我们等一下再写“前端”，现在先把什么叫「查询片段」 说完。
   
 ***
@@ -154,7 +154,7 @@ class HelloRoute extends Relay.Route {
 }
 ```
 我们之前写的 Relay 容器所需要的数据，不是已经通过「查询片段」声明了嘛，那个查询片段的名字叫做 someHelloFromRelay 来着，现在把它放进 helloField 字段，构造一个查询。
- helloField 字段在「结构库」schema.js 中定义，「结构库」中写了它包含着一个叫 hello 的 string ，还有这个 string 的值是
+ helloField 字段在「格式库」schema.js 中定义，「格式库」中写了它包含着一个叫 hello 的 string ，还有这个 string 的值是
 本次查询的名字叫做 GreetingsQuery ，因为是用来查询 someHelloFromRelay 嘛。
 
 以上是 /routes/HelloWorldRoute.js
@@ -202,7 +202,7 @@ GraphQLObjectType 接受一个名字，我们叫它 HelloObject ，还记得么�
 
 当时我们写下了： ```Relay.QL` fragment on HelloObject { hello, } `  ``` ，就是声明我们这个查询片段的形式符合 HelloObject，里头有一个 hello 。
 
-现在我们在「结构库」里这么写：
+现在我们在「格式库」里这么写：
 ```javascript
 var GreetingsType = new GraphQLObjectType({
      name: 'HelloObject',
@@ -223,7 +223,7 @@ var data = {
 注意，数据库返回的 JSON 的变量名，一定要和 GraphQLObjectType 里定义的 field 名一致，也要和 React 组件 var {hello} = this.props.someHelloFromRelay; 中的左值相同，它是一脉相承的。
   
   
-最后，我们对外暴露一个「结构库」Schema，它是一个只有一个元素 query 的对象 { query: blabla }
+最后，我们对外暴露一个「格式库」Schema，它是一个只有一个元素 query 的对象 { query: blabla }
 ```javascript
 export default new GraphQLSchema({
      query: new GraphQLObjectType({
@@ -326,7 +326,7 @@ var TaoTaoType = new GraphQLObjectType({
 ```
 它的意思是，你在用它为 HelloWorld 查询数据的时候，得在 HelloWorld 所需的数据外头包一层 forHello {       } ，以体现出有层级的数据结构。
 
-然后把结构库里的根字段改成为 TaoTao 服务：
+然后把格式库里的根字段改成为 TaoTao 服务：
 ```javascript
 export default new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -429,7 +429,7 @@ SpeechItem = Relay.createContainer(SpeechItem, {
 这个组件用于显示一条条的 speech ```<ul/>```，所以需要 id 和 text 两个信息，React列表组件如果不传入 ```key={id}``` 会在删除和添加新```<ul/> ```时发生事件触发器错位等疑难杂症，有```<ul/>```最好都把 key 属性加上。
 
 
-我们刚定义了上面这个组件会向 NameOfSpeechType 查询这些数据，接着我们到结构库 schema.js 里定义一下数据源的格式：
+我们刚定义了上面这个组件会向 NameOfSpeechType 查询这些数据，接着我们到格式库 schema.js 里定义一下数据源的格式：
 ```javascript
 var SpeechType = new GraphQLObjectType({
     name: 'NameOfSpeechType',
@@ -519,7 +519,7 @@ class MutationOfCreateSpeechInComponent extends Relay.Mutation {
         `;
     }
 
-     getFatQuery() { // 下面这东西 on 的Object，就是 schema 里定义的Mutation的名字后面加个Payload，我们等一下看结构库的时候请留意
+     getFatQuery() { // 下面这东西 on 的Object，就是 schema 里定义的Mutation的名字后面加个Payload，我们等一下看格式库的时候请留意
 // 这个查询用于声明这次变更有可能会影响到哪些东西，比如一个大型应用中你发了一句 speech ，可能会影响界面颜色、按钮disable、装备爆率等等，现在它只会影响 speechesArray ，我们就只写它。不过多写一点未来可能会影响的东西也没关系，因为这个 FatQuery 会先和真正可能会被影响的字段做交集运算，真的会被影响的部分 Relay 才会做查询。
         return Relay.QL`
             fragment on NameOfCreateNewSpeechasdfasdfPayload { 
