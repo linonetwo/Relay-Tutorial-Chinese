@@ -248,7 +248,7 @@ export default new GraphQLSchema({
 [code](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/1%20Helloworld.js)
 和
 [schema](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/1%20schemaOfHelloworld.js)
-放到[ Relay 试验场](https://facebook.github.io/relay/docs/playground.html ) 里看效果，虽然也没啥好看的，不过从宏观上回顾一下代码也蛮好的。
+放到[ Relay 试验场](https://facebook.github.io/relay/prototyping/playground.html#/ ) 里看效果，虽然也没啥好看的，不过从宏观上回顾一下代码也蛮好的。
   
 但是，别忘了这只是个 HelloWorld，里面用到的 Relay 只是很小的一部分，我们接着往下拓展它。
   
@@ -653,7 +653,7 @@ var dataBase = {
 }
 ```
   
-效果可以把[code](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/3%20combine.js)和[schema](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/3%20SchemaOfCombine.js)放到[ Relay 试验场](https://facebook.github.io/relay/docs/playground.html ) 里观看。
+效果可以把[code](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/3%20combine.js)和[schema](https://github.com/lineves/Relay-Tutorial-Chinese/blob/master/playGroundCode/3%20SchemaOfCombine.js)放到[ Relay 试验场](https://facebook.github.io/relay/prototyping/playground.html#/ ) 里观看。
   
 8.
   
@@ -682,7 +682,7 @@ var dataBase = {
 
 [ Relay 概念介绍](https://facebook.github.io/relay/docs/getting-started.html )
 
-[ Relay 试验场](https://facebook.github.io/relay/docs/playground.html ) 
+[ Relay 试验场](https://facebook.github.io/relay/prototyping/playground.html#/ ) 
 
 [ GraphQL 手册中关于类型的部分](http://graphql.org/docs/api-reference-type-system/)
 
