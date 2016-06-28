@@ -16,7 +16,7 @@ Relay是什么东西，同学们清楚不清楚啊？
   
 首先，众所周知：
   
->需求不清是加班的前兆。   —— 孙悟空
+>需求不清是加班的前兆。   —— 禅师
   
 所以在开始进入 Relay 的世界之前，我们先来明确一下这个简单例子的需求：
   
@@ -25,7 +25,7 @@ Relay是什么东西，同学们清楚不清楚啊？
   
 ##Hello world
   
-需求很简单，让我们开始吧。
+带着这个简单的需求，让我们开始吧。
 
 1.
   
@@ -520,7 +520,7 @@ class MutationOfCreateSpeechInComponent extends Relay.Mutation {
     }
 
      getFatQuery() { // 下面这东西 on 的Object，就是 schema 里定义的Mutation的名字后面加个Payload，我们等一下看格式库的时候请留意
-// 这个查询用于声明这次变更有可能会影响到哪些东西，比如一个大型应用中你发了一句 speech ，可能会影响界面颜色、按钮disable、装备爆率等等，现在它只会影响 speechesArray ，我们就只写它。不过多写一点未来可能会影响的东西也没关系，因为这个 FatQuery 会先和真正可能会被影响的字段做交集运算，真的会被影响的部分 Relay 才会做查询。
+// 这个查询用于声明这次变更有可能会影响到哪些东西，比如一个大型应用中你发了一句 speech ，可能会影响界面颜色、按钮disable、装备爆率等等，现在它只会影响 speechesArray ，我们就只写它。不过多写一点未来可能会影响的东西也没关系，因为这个 FatQuery 会先和真正可能会被影响的字段做交集运算，真的会被影响的部分 Relay 才会做查询。它就是应该让 Relay 知道这个Mutation最大会有多大的影响。
         return Relay.QL`
             fragment on NameOfCreateNewSpeechasdfasdfPayload { 
                 speechListFromMutationOutputFields { speechesArray },
@@ -528,14 +528,14 @@ class MutationOfCreateSpeechInComponent extends Relay.Mutation {
         `;
     }
 
-     getConfigs() { //下面这东西声明在schema的 outputFields ，但是是用来在断网情况下更新本地显示的，注意，它获取id是为了即时在这个id对应的列表里显示你做出过的修改
+     getConfigs() { //下面这东西说明了服务器返回的信息与客户端内容的相关性，声明在schema的 outputFields ，但是是用来在断网情况下更新本地显示的，注意，它获取id是为了即时在这个id对应的列表里显示你做出过的修改
         return [{
             type: 'FIELDS_CHANGE',
             fieldIDs: { speechListFromMutationOutputFields: this.props.speechListWithID.id },
         }];
     }
 
-    getVariables() { // 这个函数用来把 this.props.text 转发到本地变量 text
+    getVariables() { // 这个函数用来把 this.props.text 转发到本地变量 text，它是我们将要发送到服务端的内容。也就是说这里才是真正用于向后台提交东西的地方。
         return { text: this.props.text };
     }
 
